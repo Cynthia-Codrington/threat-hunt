@@ -1,1 +1,24 @@
+CorpHealth Threat Hunt Report – CH-OPS-WKS02
 
+Investigation Date: November–December 2025
+Analyst: Cynthia Herbert
+
+Executive Summary
+
+During the investigation of CH-OPS-WKS02, suspicious activity was observed involving privilege escalation, lateral movement, persistence, and external exfiltration attempts. The attacker leveraged a combination of PowerShell, remote sessions, and staged binaries to maintain control.
+
+Key Findings:
+
+Initial access via chadmin account from Vietnam IP 104.164.168.17.
+
+Execution of encoded PowerShell commands for staging and persistence.
+
+Creation of staging files (inventory_6ECFD4DF.csv) and duplicate artifacts.
+
+Reverse shell delivered via ngrok tunnel (revshell.exe).
+
+Persistence established via Startup folder.
+
+Lateral pivot to internal IPs: 10.168.0.6 and 10.168.0.7.
+
+MITRE ATT&CK techniques identified include: T1078, T1059, T1086, T1105, T1547.
