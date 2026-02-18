@@ -1,8 +1,16 @@
  # 🕵️‍♀️CorpHealth Threat Hunt Report 
 
-**Investigation Date:** November–December 2025  
-**Analyst:** Cynthia Codrington  
-
+**Date:** 01/17/25  
+**Analyst:** Cynthia Codrington
+**Affected System(s):** CH-OPS-WKS02  
+**Scope / Environment:** Operations Department  
+**Incident Type:** Operations Activity Review / Suspicious Automation Activity  
+**Status:** Investigation Complete / Findings Summary  
+**Priority / Severity:** Medium  
+**Detection Methods:**  
+- Microsoft Defender for Endpoint (Endpoint telemetry, Process & Network events)  
+- Azure Diagnostic & Device Logs  
+- DeviceFileEvents, DeviceNetworkEvents, DeviceLogonEvents, DeviceRegistryEvents  
 ---
 
  ## 🎯Executive Summary
@@ -558,6 +566,7 @@ DeviceProcessEvents
 ## ⚠️Conclusion
 
 CH-OPS-WKS02 showed unauthorized use of a privileged account, file staging, registry tampering, and reverse shell deployment — indicating deliberate intrusion; remediate, monitor, and enforce least-privilege policies.
+
 ---
 
 ## 🧠Lessons Learned 
