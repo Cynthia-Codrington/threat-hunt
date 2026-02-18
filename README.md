@@ -64,6 +64,7 @@ DeviceFileEvents
 **Artifact:** MaintenanceRunner_Distributed.ps1
 
 **Screenshot:**
+<img width="940" height="165" alt="image" src="https://github.com/user-attachments/assets/71bd45fb-82fb-42a3-9cf2-65908beeea50" />
 
 ---
 ### Flag 2 – Outbound Beacon Indicator
@@ -77,6 +78,7 @@ DeviceNetworkEvents
 | where InitiatingProcessCommandLine contains "MaintenanceRunner_Distributed.ps1"
 ```
 **Screenshot:**
+<img width="940" height="309" alt="image" src="https://github.com/user-attachments/assets/ca4d04f3-d110-4232-86e9-068bd612753a" />
 
 ---
 ### Flag 3 – Beacon Destination
@@ -91,6 +93,7 @@ DeviceNetworkEvents
 | project TimeGenerated, ActionType, DeviceName, InitiatingProcessCommandLine, RemoteIP, RemotePort
 ```
 **Screenshot:**
+<img width="940" height="121" alt="image" src="https://github.com/user-attachments/assets/634af2a2-0820-452e-b0ec-74ca944ad563" />
 
 ---
 ### Flag 4 – Confirm the Successful Beacon Timestamp
@@ -108,6 +111,7 @@ DeviceNetworkEvents
 | project TimeGenerated, ActionType, DeviceName, InitiatingProcessCommandLine, RemoteIP, RemotePort
 ```
 **Screenshot:**
+<img width="940" height="141" alt="image" src="https://github.com/user-attachments/assets/56920ecd-ae71-4ef2-9cfe-50a950b175c1" />
 
 ---
 ### Flag 5 – Unexpected Staging Activity Detected
@@ -125,6 +129,7 @@ DeviceFileEvents
 | project TimeGenerated, ActionType, DeviceName, FileName, FolderPath
 ```
 **Screenshot:**
+<img width="940" height="168" alt="image" src="https://github.com/user-attachments/assets/5dff6ffb-9eec-4f2f-a9b7-02709028b597" />
 
 ---
 ### Flag 6 – Confirm the Staged File’s Integrity
@@ -142,6 +147,7 @@ DeviceFileEvents
 | project Timestamp, ActionType, DeviceName, FileName, FolderPath, SHA256
 ```
 **Screenshot:**
+<img width="940" height="91" alt="image" src="https://github.com/user-attachments/assets/a382f211-5186-4216-b36e-d029340556fd" />
 
 ---
 ### Flag 7 – Duplicate Staged Artifact
@@ -159,6 +165,8 @@ DeviceFileEvents
 | project Timestamp, ActionType, DeviceName, FileName, FolderPath, SHA256
 ```
 **Screenshot:**
+<img width="940" height="229" alt="image" src="https://github.com/user-attachments/assets/3a6b28eb-0ce8-44e2-a865-71390abe4794" />
+
 ---
 
 ### Flag 8 – Suspicious Registry Activity
@@ -178,6 +186,8 @@ DeviceRegistryEvents
 | project Timestamp, DeviceName, Period, ActionType, RegistryKey, RegistryValueName, RegistryValueData
 ```
 **Screenshot:**
+<img width="940" height="168" alt="image" src="https://github.com/user-attachments/assets/8df7dc34-8049-426d-a0fe-a3220a6a61da" />
+
 ---
 ### Flag 9 – Scheduled Task Persistence
 
@@ -195,6 +205,8 @@ DeviceRegistryEvents
 ```
 
 **Screenshot:**
+<img width="940" height="165" alt="image" src="https://github.com/user-attachments/assets/9c6bf006-6c35-4cfd-ac79-d41407130acd" />
+
 ---
 ### Flag 10 – Registry-based Ephemeral Persistence
 
@@ -210,6 +222,8 @@ DeviceRegistryEvents
 |project DeviceName, InitiatingProcessAccountName, ActionType, RegistryKey, RegistryValueName, InitiatingProcessFileName, InitiatingProcessCommandLine
 ```
 **Screenshot:**
+<img width="940" height="311" alt="image" src="https://github.com/user-attachments/assets/2d7e2ff7-508e-4366-87a5-68aa28f2fe19" />
+
 ---
 ### Flag 11 – Privilege Escalation Event Timestamp
 
@@ -224,6 +238,8 @@ DeviceEvents
 | sort by Timestamp desc
 ```
 **Screenshot:**
+<img width="940" height="302" alt="image" src="https://github.com/user-attachments/assets/f9efab24-2772-4021-ac67-1bb4d0305eeb" />
+
 ---
 ### Flag 12 – AV Exclusion Attempt
 
@@ -240,6 +256,8 @@ DeviceProcessEvents
 ```
 
 **Screenshot / Output:** Attempted Defender exclusion logged.
+<img width="940" height="114" alt="image" src="https://github.com/user-attachments/assets/5fc688b0-fced-49f9-a148-1f693786550c" />
+
 ---
 
 ### Flag 13 – PowerShell Encoded Command Execution
@@ -261,6 +279,8 @@ DeviceProcessEvents
 ```
 
 **Screenshot / Output:** Decoded command confirms malicious script execution.
+<img width="940" height="131" alt="image" src="https://github.com/user-attachments/assets/72879210-e179-44af-a239-ac33b9b76656" />
+
 ---
 
 ### Flag 14 – Privilege Token Modification
@@ -279,6 +299,8 @@ DeviceEvents
 ```
 
 **Screenshot / Output:** Token privilege modification event logged.
+<img width="940" height="171" alt="image" src="https://github.com/user-attachments/assets/14a76e57-7a31-4723-92da-7a0fcb2a87a8" />
+
 ---
 
 ### Flag 15 – Token User SID
@@ -287,6 +309,8 @@ DeviceEvents
 
 KQL Query: Same as Flag 14, inspect AdditionalFields.
 **Screenshot / Output:** Confirms targeted user token affected.
+<img width="940" height="135" alt="image" src="https://github.com/user-attachments/assets/03420449-5a55-4960-a8f2-3a2061d889ad" />
+
 ---
 
 ### Flag 16 – Ingress Tool Transfer (External Tunnel)
@@ -305,6 +329,9 @@ DeviceFileEvents
 ```
 
 **Screenshot / Output:** Confirms staged reverse shell.
+<img width="940" height="64" alt="image" src="https://github.com/user-attachments/assets/fd6ed347-b0cc-4152-8256-cbc6a10eecd3" />
+<img width="940" height="309" alt="image" src="https://github.com/user-attachments/assets/4d2e1686-ad15-4f64-bc09-2a22ee1a42ad" />
+
 ---
 
 ## Flag 17 – External Download Source
@@ -322,6 +349,8 @@ DeviceNetworkEvents
 ```
 
 *Screenshot / Output:* Download URL confirmed.
+<img width="940" height="230" alt="image" src="https://github.com/user-attachments/assets/71e5aa73-e265-4571-9c33-96e78b560a8e" />
+
 ---
 ### Flag 18 – Execution of Staged Unsigned Binary
 
@@ -338,6 +367,8 @@ DeviceProcessEvents
 ```
 
 **Screenshot / Output:** Execution confirmed.
+<img width="940" height="141" alt="image" src="https://github.com/user-attachments/assets/22150769-51c6-4d89-914f-ae55dd795b1e" />
+
 ---
 
 ### Flag 19 – External IP Contacted by Executable
@@ -355,6 +386,8 @@ DeviceNetworkEvents
 ```
 
 **Screenshot / Output:** External C2 contact logged.
+<img width="940" height="184" alt="image" src="https://github.com/user-attachments/assets/4a451ef2-de23-45b6-bda2-883e49c6110f" />
+
 ---
 ### Flag 20 – Persistence via Startup Folder
 
@@ -374,6 +407,8 @@ DeviceFileEvents
 ```
 
 **Screenshot / Output:** Startup persistence observed.
+<img width="940" height="230" alt="image" src="https://github.com/user-attachments/assets/3da4f36e-b3b5-434d-9c3a-e4f8fbb03bfc" />
+
 ---
 
 ### Flag 21 – Remote Session Source Device
@@ -391,6 +426,8 @@ DeviceNetworkEvents
 ```
 
 **Screenshot / Output:** Remote device identified.
+<img width="745" height="227" alt="image" src="https://github.com/user-attachments/assets/33564ad5-9693-40dd-812b-b22ec225d6ba" />
+
 ---
 
 ## Flag 22 – Remote Session IP Address
@@ -408,6 +445,8 @@ DeviceNetworkEvents
 ```
 
 **Screenshot / Output:** Confirms network origin.
+<img width="925" height="484" alt="image" src="https://github.com/user-attachments/assets/499f3961-72a0-4f46-a7c1-034eb60f0a9e" />
+
 ---
 
 ### Flag 23 – Internal Pivot Host
@@ -425,6 +464,8 @@ DeviceNetworkEvents
 ```
 
 Screenshot / Output: Internal pivot hosts confirmed.
+<img width="747" height="245" alt="image" src="https://github.com/user-attachments/assets/63ffea31-ca20-4fa1-a746-d042e122b3e9" />
+
 ---
 ### Flag 24 – First Suspicious Logon
 
@@ -441,6 +482,8 @@ DeviceLogonEvents
 ```
 
 **Screenshot / Output:** Initial logon identified.
+<img width="940" height="263" alt="image" src="https://github.com/user-attachments/assets/2cf9a1e6-952e-4cb8-8612-10a76dad5cbf" />
+
 ---
 
 ### Flag 25 – IP Address of First Logon
@@ -448,6 +491,8 @@ DeviceLogonEvents
 **Finding:** IP associated: 104.164.168.17
 KQL Query: Same as Flag 24, project RemoteIP.
 **Screenshot / Output:** Confirms initial network entry point.
+<img width="838" height="436" alt="image" src="https://github.com/user-attachments/assets/3a42638e-5532-4e36-bfd0-f95c57d00def" />
+
 ---
 
 ### Flag 26 – Account Used in First Logon
@@ -463,6 +508,8 @@ DeviceLogonEvents
 ```
 
 Screenshot / Output: Confirms compromised account.
+<img width="940" height="229" alt="image" src="https://github.com/user-attachments/assets/a55024e8-5c27-4d78-ae69-c98972bb8d9e" />
+
 ---
 ### Flag 27 – Attacker Geographic Region
 
@@ -478,6 +525,8 @@ DeviceLogonEvents
 ```
 
 **Screenshot / Output:** Geolocation enrichment confirms region.
+<img width="940" height="217" alt="image" src="https://github.com/user-attachments/assets/169d04c2-27b4-4c8c-9d70-f7a550f2785d" />
+
 ---
 
 ### Flag 28 – First Process Launched After Logon
@@ -495,6 +544,8 @@ DeviceProcessEvents
 ```
 
 **Screenshot / Output:** First action post-logon verified.
+<img width="759" height="384" alt="image" src="https://github.com/user-attachments/assets/36a71778-3a47-4ca5-8138-dd48c82df5dc" />
+
 ---
 ### Flag 29 – First File Accessed
 
@@ -510,6 +561,8 @@ DeviceProcessEvents
 ```
 
 Screenshot / Output: First file accessed identified.
+<img width="940" height="104" alt="image" src="https://github.com/user-attachments/assets/12c28cb9-9880-436e-b1c1-6e2ccbd993c7" />
+
 ---
 
 ### Flag 30 – Next Action After Reading File
@@ -528,6 +581,33 @@ DeviceProcessEvents
 ```
 
 **Screenshot / Output:** Confirms post-file reconnaissance activity.
+<img width="940" height="334" alt="image" src="https://github.com/user-attachments/assets/3c6fca21-aa2b-4e6d-9e2a-79bf4d6654ad" />
+
+---
+### Flag 31 – Identify the Next Account Accessed After Recon
+
+**Finding:** Following the attacker’s initial reconnaissance, the first successful logon to a user account was detected. The attacker accessed the ops.maintenance account immediately after the enumeration activity, indicating a shift from information gathering to account-level interaction and possible privilege escalation.
+
+**KQL Query:**
+```kql
+
+// Timestamp reference point set to end of enumeration window
+DeviceLogonEvents
+| where DeviceName == "ch-ops-wks02"
+| where Timestamp > datetime(2025-11-23T03:11:00.6981995Z)
+| where ActionType == "LogonSuccess"
+| sort by Timestamp asc
+| take 1
+| project Timestamp,
+          DeviceName,
+          AccountName,
+          LogonType,
+          RemoteIP,
+          InitiatingProcessFileName
+```
+**Screenshot:** This confirms the attacker moved from reconnaissance to active account access by using the ops.maintenance account.
+<img width="940" height="264" alt="image" src="https://github.com/user-attachments/assets/1d4ae3f1-87c5-40eb-8f64-e850294392dd" />
+
 ---
 ## 🔍 Timeline of Events
 | Time (UTC)             | Stage                              | Event / Action                                            | Details                                                                       |
