@@ -193,7 +193,7 @@ Additional persistence mechanisms were deployed.
 
 ---
 
-##Data Access & Staging
+### Data Access & Staging
 
 Sensitive financial records were accessed and staged for exfiltration.
 
@@ -218,7 +218,7 @@ Sensitive financial records were accessed and staged for exfiltration.
 ``` 6886c0a2e59792e69df94d2cf6ae62c2364fda50a23ab44317548895020ab048 ```
 
 ---
-##Defense Evasion
+### Defense Evasion
 
 The attacker attempted to conceal activity before exiting the environment.
 
@@ -232,7 +232,8 @@ The attacker attempted to conceal activity before exiting the environment.
 ```ClrUnbackedModuleLoaded ```
 
 ---
-##Indicators of Compromise (IOC)
+###Indicators of Compromise (IOC)
+
 **Malicious Files**
 | File	                 |SHA256  |
 | --------------------- | ------------------------- |
