@@ -269,9 +269,7 @@ Sensitive financial data was accessed and staged for potential exfiltration, ind
 
 5. Conduct security awareness training: Focus on phishing attempts targeting HR and recruitment teams.
 
-6. # Appendix – Investigation Queries
-
- ---
+---
 
 ## 🧾 Appendix – Investigation Queries
 **Query 1 – Malware Execution**
