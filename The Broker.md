@@ -481,15 +481,6 @@ Sensitive financial data was accessed and staged for potential exfiltration, ind
 
 3. Enforce Multi-Factor Authentication: Required for RDP and privileged accounts.
 
-4. Improve endpoint detection rules
-Monitor for:
-
-- certutil downloads
-
-- scheduled task creation
-
-- event log clearing
-
-- reflective .NET assembly loading
+4. Improve endpoint detection rules by monitoring for: certutil downloads, scheduled task creations, event log clearing and reflective .NET assembly loading
 
 5. Conduct security awareness training: Focus on phishing attempts targeting HR and recruitment teams.
