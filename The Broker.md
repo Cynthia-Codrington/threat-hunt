@@ -277,16 +277,19 @@ Sensitive financial data was accessed and staged for potential exfiltration, ind
 ```kql
 DeviceProcessEvents
 | where DeviceName == "as-pc1"
-| where FileName == "Daniel_Richardson_CV.pdf.exe" ```
+| where FileName == "Daniel_Richardson_CV.pdf.exe"
+ ```
 
 **Query 2 – C2 Communication**
 ```kql
 DeviceNetworkEvents
 | where DeviceName contains "as-pc1"
-| where InitiatingProcessFileName == "daniel_richardson_cv.pdf.exe" ```
+| where InitiatingProcessFileName == "daniel_richardson_cv.pdf.exe"
+```
 
 **Query 3 – AnyDesk Installation**
 ```kql
 DeviceFileEvents
-| where FileName in ("AnyDesk.exe","AnyDesk64.exe") ```
+| where FileName in ("AnyDesk.exe","AnyDesk64.exe")
+```
 
