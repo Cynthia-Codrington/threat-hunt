@@ -4,12 +4,19 @@
  # 🕵️‍♀️The Broker Threat Hunt Report 
 
 **Date:** 01/15/26 
+
 **Analyst:** Cynthia Codrington
+
 **Affected System(s):** AS-PC1 > AS-PC2 > AS-SRV 
+
 **Scope / Environment:** Operations Department 
+
 **Incident Type:** Malicious Endpoint Compromise 
+
 **Status:** Investigation Complete / Findings Summary 
-**Priority / Severity:** High 
+
+**Priority / Severity:** High
+
 **Detection Methods:**  
 - Microsoft Defender for Endpoint (Endpoint telemetry, Process & Network events)  
 - Azure Diagnostic & Device Logs
