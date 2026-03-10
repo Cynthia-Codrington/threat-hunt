@@ -1,51 +1,54 @@
-<img width="1024" height="1024" alt="1xce7_ftL_MGGqXT6ZXSlgRRQxJSc25yKi3J2xXVjWPG4WGA" src="https://github.com/user-attachments/assets/48580adb-e6d0-410e-be39-3509e4c2f643" />
- 
- # 🕵️‍♀️CorpHealth Threat Hunt Report 
+<img width="683" height="1024" alt="image" src="https://github.com/user-attachments/assets/ea894e95-708d-4eeb-beef-0ebed475c824" />
 
-**Date:** 01/17/25  
+ 
+ # 🕵️‍♀️The Broker Threat Hunt Report 
+
+**Date:** 01/15/26 
 **Analyst:** Cynthia Codrington
-**Affected System(s):** CH-OPS-WKS02  
+**Affected System(s):** AS-PC1 > AS-PC2 > AS-SRV 
 **Scope / Environment:** Operations Department  
-**Incident Type:** Operations Activity Review / Suspicious Automation Activity  
+**Incident Type:** Malicious Endpoint Compromise 
 **Status:** Investigation Complete / Findings Summary  
-**Priority / Severity:** Medium  
+**Priority / Severity:** High 
 **Detection Methods:**  
 - Microsoft Defender for Endpoint (Endpoint telemetry, Process & Network events)  
 - Azure Diagnostic & Device Logs  
-- DeviceFileEvents, DeviceNetworkEvents, DeviceLogonEvents, DeviceRegistryEvents  
 ---
 
  ## 🎯Executive Summary
 
-During the investigation of **CH-OPS-WKS02**, suspicious activity was observed involving **privilege escalation, lateral movement, persistence, and external exfiltration attempts**. The attacker leveraged a combination of PowerShell, remote sessions, and staged binaries to maintain control.
+On January 14, 2026, a malicious resume file executed by Sophie Turner on AS-PC1 triggered a multi-stage intrusion. The attacker established C2 with cdn.cloud-endpoint.net, harvested credentials, deployed AnyDesk for persistent access, and later pivoted via RDP to access sensitive financial data (BACS_Payments_Dec2025.ods), staging it in Shares.7z. Logs were cleared and in-memory credential theft tools executed to evade detection, reflecting a hands-on-keyboard intrusion targeting financial records.
 
 **Key Findings:**
-
-- Initial access via `chadmin` account from Vietnam IP `104.164.168.17`.
-- Execution of encoded PowerShell commands for staging and persistence.
-- Creation of staging files (`inventory_6ECFD4DF.csv`) and duplicate artifacts.
-- Reverse shell delivered via ngrok tunnel (`revshell.exe`).
-- Persistence established via Startup folder.
-- Lateral pivot to internal IPs: `10.168.0.6` and `10.168.0.7`.
-- MITRE ATT&CK techniques identified include: **T1078, T1059, T1086, T1105, T1547**.
+- Initial infection via user executing Daniel_Richardson_CV.pdf.exe on AS-PC1.
+- Outbound communication to attacker C2 domain cdn.cloud-endpoint.net.
+- SAM and SYSTEM registry hives accessed; SharpChrome injected into notepad.exe.
+- AnyDesk installed with unattended password intrud3r!; svc_backup account created; scheduled task MicrosoftEdgeUpdateCheck deployed.
+- Lateral pivot via RDP from AS-PC1 > AS-PC2 > AS-SRV; failed WMIC and PsExec attempts.
+- Sensitive financial document BACS_Payments_Dec2025.ods accessed and staged into archive Shares.7z.
+- Security and Application logs cleared; malware disguised as legitimate binaries; memory-based tooling loaded.
+- MITRE ATT&CK techniques identified include: **T1204, T1071, T1003.002, T1555, T1219, T1136.001, T1053.005, T1047, T1569.002, T1021.001, T1078.003, T1560.001, T1036.005, T1070.001, T1620**
 
 ---
 
  ## 🧠Scenario Overview
 
-Following the phased deployment of **CorpHealth**, anomalous activity was identified on an operations workstation involving a privileged automation account intended strictly for non-interactive use.
+The compromise began when a user executed a malicious resume executable, which connected to attacker-controlled infrastructure and deployed persistence tools. The attacker performed reconnaissance, harvested credentials from SAM and SYSTEM hives, and escalated privileges to move laterally.
 
-Telemetry indicates execution outside approved maintenance windows, deviations from established automation baselines, and evidence of manual process activity under the privileged account.
+AnyDesk was installed for persistent remote access, and after failed attempts with WMIC and PsExec, the attacker successfully pivoted via RDP. From the secondary workstation, sensitive financial documents were accessed and staged into a compressed archive.
 
-Historical Microsoft Defender for Endpoint and device logs are being analyzed to determine scope, timeline, and whether the activity represents authorized operations or potential credential misuse.
+Before leaving, the attacker cleared logs and loaded credential-harvesting tools in memory to evade detection.
 
 
-- **Affected System:** CH-OPS-WKS02  
-- **Suspicious Activity Window:** Nov 9 – Dec 13, 2025  
-- **Initial Access Account:** `chadmin`  
-- **Remote Session Device Name:** `对手`  
-- **Remote IP:** `104.164.168.17`  
-- **Internal Pivot Hosts:** `10.168.0.6`, `10.168.0.7`  
+- **Affected System:** AS-PC1 
+- **Suspicious Activity Window:** 2026-01-14T23:31 → 2026-01-16T11:09
+- **Initial Access Account:** Sophie.Turner
+- **Initial Vector:** Daniel_Richardson_CV.pdf.exe  
+- **Remote Session Host:** AS-PC1  
+- **Remote IP:** `168.63.129.16`  
+- **Pivot Hosts:** `AS-PC1 > AS-PC2 > AS-SRV`
+- **Remote Access Tool:** AnyDesk
+- **Exfiltrated Data:** 'BACS_Payments_Dec2025.ods → Shares.7z' 
 
 ---
 
@@ -614,63 +617,80 @@ DeviceLogonEvents
 ## 🔍 Timeline of Events
 | Time (UTC)             | Stage                              | Event / Action                                            | Details                                                                       |
 | ---------------------- | ---------------------------------- | --------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| 2025-11-23T03:08       | Initial Access                     | Suspicious logon                                          | Account: `chadmin`, RemoteIP: 104.164.168.17, RemoteDevice: 对手                |
-| 2025-11-23T03:08–03:11 | Recon                              | First process                                             | `explorer.exe` launched                                                       |
-| 2025-11-23T03:11       | File Access                        | First file read                                           | `user-pass.txt`                                                               |
-| 2025-11-23T03:11+      | Recon                              | Local enumeration                                         | `ipconfig.exe` executed; account accessed: `ops.maintenance`                  |
-| 2025-11-23T03:46       | C2 Attempt                         | Outbound beacon                                           | `MaintenanceRunner_Distributed.ps1` attempted connection (loopback initially) |
-| 2025-11-25T04:14       | C2 Success                         | Successful beacon                                         | Remote endpoint reached                                                       |
-| 2025-11-25T04:15       | Staging                            | File staging                                              | `inventory_6ECFD4DF.csv` created; duplicate working file in Temp              |
-| 2025-11-25T04:15–04:24 | Persistence & Privilege Escalation | Registry modifications, scheduled task, ephemeral Run key | PowerShell scripts executed; token privileges modified                        |
-| 2025-12-02T12:56       | Ingress Tool Transfer              | Download `revshell.exe`                                   | From ngrok tunnel via `curl.exe`                                              |
-| 2025-12-02T12:57       | Execution                          | Run `revshell.exe`                                        | Executed by `explorer.exe` from user profile                                  |
-| 2025-12-02T12:57+      | C2 Communication                   | External IP contact                                       | 13.228.171.119, port 11746                                                    |
-| Nov–Dec window         | Persistence                        | Startup folder placement                                  | `revshell.exe` copied to Startup directory                                    |
-| Nov–Dec window         | Lateral / Pivot                    | Remote session via internal IPs                           | 10.168.0.7, 10.168.0.6, remote device: 对手, internal hops identified           |
+| 2026-01-14T23:31      | Initial Access                     | Initial alert                                         | MDE detected suspicious file execution
+|
+| 2026-01-14T23:48 | Initial Access                              | Inbound connection                                            | Remote IP 168.63.129.16:80 connected to local 10.1.0.154:54554                                                      |
+| 2026-01-14T23:47       | Command & Control                       | Outbound C2 connection                               | daniel_richardson_cv.pdf.exe connected to cdn.cloud-endpoint.net                                                              |
+| 2026-01-15T00:11     | Persistence                             | Remote access tool installed                                       | AnyDesk installed, unattended access password intrud3r! configured                  |
+| 2026-01-15T05:09      | Persistence                        | Suspicious child process                                         | notepad.exe spawned by malware |
+| 2026-01-15T04:55      | Data Access                        | Sensitive document access                                        | BACS_Payments_Dec2025.ods opened from host as-pc2                                                     |
+| 2026-01-15T04:59      | Data Access                           | Data archived                                            |Sensitive files saved into Shares.7z              |
+| 2026-01-15T05:00 | Defense Evasion | Memory-based credential theft| SharpChrome loaded in notepad.exe memory                      |
+| 2026-01-15T05:10       | Defense Evasion             | Reflective code loading                                  | Malicious assembly loaded in memory                                             |
+| 2026-01-15T05:15       | Discovery                         | Registry & group enumeration                                      | SAM/SYSTEM queried; Administrators group enumerated                                  |
+| 2026-01-15T06:00      | Lateral Movement                   | Remote execution attempts                                       | WMIC and PsExec failed on host as-pc2                                                 |
+| 2026-01-15T06:10        |Lateral Movement                      | Successful pivot                                 | RDP session from as-pc1 → as-pc2 → as-srv using david.mitchell                                  |
+|2026-01-15T06:30        | Persistence                    | Scheduled task created                          | MicrosoftEdgeUpdateCheck runs RuntimeBroker.exe           |
+| 2026-01-16T11:09      | Privilege Escalation                    | Admin account added                         | svc_backup added as Administrator           |
 
 ---
 ## 🧩 MITRE ATT&CK Mapping
 
-| Phase                | Technique                     | Tactic               | Related Flags | Notes                                                   |
-| -------------------- | ----------------------------- | -------------------- | ------------- | ------------------------------------------------------- |
-| Initial Access       | T1078 – Valid Accounts        | Initial Access       | 24–26         | Compromised chadmin account                             |
-| Execution            | T1059.001 – PowerShell        | Execution            | 13, 14        | Encoded PowerShell commands executed                    |
-| Persistence          | T1547.001 – Startup Items     | Persistence          | 20            | `revshell.exe` placed in Startup folder                 |
-| Privilege Escalation | T1068 – Exploitation          | Privilege Escalation | 11, 14, 15    | ConfigAdjust token modification                         |
-| Defense Evasion      | T1089 – AV/Defender Bypass    | Defense Evasion      | 12            | Attempted exclusion from Defender                       |
-| Lateral Movement     | T1021.001 – Remote Services   | Lateral Movement     | 21–23         | Remote session from Vietnam IP to internal hosts        |
-| Command & Control    | T1105 – Ingress Tool Transfer | C2                   | 16, 17, 19    | Reverse shell binary download via ngrok and external IP |
-| Discovery            | T1082 – System Information    | Discovery            | 30            | Running `ipconfig.exe` post-file access                 |
-| Credential Access    | T1003 – Credential Dumping    | Credential Access    | 29            | Accessed `user-pass.txt`                                |
+| Phase                | Technique                     | Related Flags  | Notes                                                   |
+| -------------------- | ----------------------------- | -------------- | ------------------------------------------------------- |
+| Initial Access       | T1204 – User Execution        |  1-3           | User executed malicious resume file                     |
+| Command & Control    | T1071 – Application Protocol  |  4-5           | Malware connected to attacker C2 domain                 |
+| Persistence          | T1219 – Remote Access         |  6-8           | AnyDesk installed for persistent access                 |
+| Persistence          | T1136.001 – Account Creation  |  9-10          | svc_backup account created                              |
+| Persistence          | T1053.005 – Scheduled Task    |  11-12         | Scheduled task maintained persistence                   |
+| Credential Access    | T1003.002 – SAM Dumping       |  13-14         | SAM credentials accessed and staged                     |
+| Credential Access    | T1555 – Credential Theft      |  15-16         | SharpChrome harvested browser credentials               |
+| Defense Evasion      | T1036.005 – File Masquerading |  12,17         | Malware disguised as legitimate binaries                |
+| Defense Evasion      | T1070.001 – Log Clearing      |  18            | Security and Application logs cleared                   |
+| Defense Evasion      | T1620 – Reflective Loading    |  19            | Malicious code loaded in memory                         |
+| Discovery            | T1012 – Registry Query        |  13            | Registry queried for system data                        |
+| Discovery            | T1069.002 – Group Enumeration |  20            | Administrator group enumerated                          |
+| Lateral Movement     | T1047 – WMI Execution         |  21            | WMIC attempted remote execution                         |
+| Lateral Movement     | T1569.002 – PsExec Execution  |  22            | PsExec attempt observed                                 |
+| Lateral Movement     | T1021.001 – RDP Movement      |  23            | RDP used to pivot between hosts                         |
+| Exfiltration         | T1560.001 – Data Archiving    |  24-25         | Data archived into Shares.7z                            |
 
 ---
 
 ## ⚠️Conclusion
 
-CH-OPS-WKS02 showed unauthorized use of a privileged account, file staging, registry tampering, and reverse shell deployment — indicating deliberate intrusion; remediate, monitor, and enforce least-privilege policies.
+The investigation confirmed a multi-stage intrusion initiated through social engineering, where malware disguised as a resume was executed by a recruitment staff member. The attacker established persistence using a legitimate remote access tool, harvested credentials, and moved laterally across systems.
+
+Sensitive financial data was accessed and staged for potential exfiltration, indicating a probable data theft objective. Despite attempts to evade detection through memory-based tools and log clearing, endpoint telemetry allowed investigators to reconstruct the full attack chain. 
 
 ---
 
 ## 🧠Lessons Learned 
 
-- Privileged automation accounts must be restricted to non-interactive use only.  
-- Scheduled tasks and scripts should be monitored for anomalous execution patterns.  
-- Endpoint telemetry is critical to detect early lateral movement and staging activity.  
-- Network egress to unknown IPs should trigger immediate alerting.  
-- File integrity monitoring can reveal staged artifacts and unauthorized modifications.  
-- Registry and startup persistence attempts are strong indicators of post-compromise activity.  
+- Executable files disguised as documents remain a highly effective phishing technique.
+- Remote administration tools can easily be abused for persistence.
+- Credential harvesting enables rapid lateral movement within enterprise environments.
+- Monitoring of administrative tools and log clearing activity is critical for early detection.
+
 
 ---
 ## 🛡 After-Action Recommendations
 
-1. Reset compromised accounts (chadmin) and enforce MFA.
+1. Implement application control policies: Block execution of unknown binaries from user directories.
 
-2. Harden endpoint defenses: block script-based AV exclusions, monitor PowerShell commands.
+2. Restrict remote administration tools: Block unauthorized use of tools such as AnyDesk.
 
-3. Segment networks to limit lateral movement.
+3. Enforce Multi-Factor Authentication: Required for RDP and privileged accounts.
 
-4. Remove malicious artifacts (revshell.exe, staging files).
+4. Improve endpoint detection rules
+Monitor for:
 
-5. Block malicious IPs (104.164.168.17, 13.228.171.119).
+- certutil downloads
 
-6. Conduct red/blue team review and update response playbooks.
+- scheduled task creation
+
+- event log clearing
+
+- reflective .NET assembly loading
+
+5. Conduct security awareness training: Focus on phishing attempts targeting HR and recruitment teams.
