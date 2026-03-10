@@ -52,423 +52,186 @@ Before leaving, the attacker cleared logs and loaded credential-harvesting tools
 
 ---
 
-## 🚩Flag-by-Flag Findings
-
-### Flag 1 – Initial Vector
-**Finding:** User executed malicious resume file to initiate compromise.
+## 🚩Investigation Findings
 
-**KQL Query:**  
-```kql
-DeviceProcessEvents
-| where DeviceName == "as-pc1"
-| where InitiatingProcessAccountName == "sophie.turner"
-| where FileName == "Daniel_Richardson_CV.pdf.exe"
-| order by Timestamp desc
-| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessCommandLine, InitiatingProcessFileName, InitiatingProcessAccountName
-```
+### Flag 1 – Initial Access
+User sophie.turner executed a malicious resume file that initiated the compromise.
 
-**Artifact:** Daniel_Richardson_CV.pdf.exe
+**Artifacts:**
+- File: Daniel_Richardson_CV.pdf.exe
+- Hash: 48b97fd91946e81e3e7742b3554585360551551cbf9398e1f34f4bc4eac3a6b5
+- Parent Process: Explorer.exe
+- Spawned Process: notepad.exe
 
-**Screenshot:**
-<img width="595" height="766" alt="image" src="https://github.com/user-attachments/assets/f52a4de5-7370-46ae-8f4d-c92aeb71bd5c" />
+### Command & Control
+Outbound communications were established with attacker infrastructure.
 
+**Domain**
 
----
-### Flag 2 – Payload hash
+``cdn.cloud-endpoint.net```
 
-**Finding:** SHA256 of initial payload. <br>
-SHA256: 48b97fd91946e81e3e7742b3554585360551551cbf9398e1f34f4bc4eac3a6b5
+**Responsible Process**
 
-**KQL Query:**
-```kql
-DeviceFileEvents
-| where FileName == "Daniel_Richardson_CV.pdf.exe"
-| project Timestamp, DeviceName, FileName, SHA256
-```
----
-### Flag 3 – User Interaction
+``Daniel_Richardson_CV.pdf.exe```
 
-**Finding:** How payload was initially launched.
+**Additional Infrastructure**
 
-**KQL Query:**
-```kql
-DeviceProcessEvents
-| where DeviceName == "as-pc1"
-| where FileName == "Daniel_Richardson_CV.pdf.exe"
-| project Timestamp, FileName, InitiatingProcessParentFileName, InitiatingProcessCommandLine
-```
-**Artifact:** Parent process Explorer.EXE
----
-### Flag 4 – Suspicious Child Process
+``sync.cloud-endpoint.net```
 
-**Finding:** 
-**Last successful connection:** 
+### Credential Access
+The attacker attempted to extract credentials from local system stores.
 
-**KQL Query:**
-```kql
-DeviceProcessEvents
-| where DeviceName == "as-pc1"
-| where InitiatingProcessAccountName == "sophie.turner"
-| where InitiatingProcessParentFileName contains ".exe"
-| project Timestamp, FileName, FolderPath, InitiatingProcessFileName
-| order by Timestamp desc
-```
-**Artifact:** notepad.exe
-<img width="940" height="135" alt="image" src="https://github.com/user-attachments/assets/d4e13ecb-7ed2-476b-924c-1d0e4b2ee684" />
+**Registry Targets**
 
----
-### Flag 5 – Process Arguments
+``SAM
+SYSTEM ```
 
-**Finding:** Child process executed with unusual arguments.<br>
+**Local Staging Directory**
 
-<img width="695" height="366" alt="image" src="https://github.com/user-attachments/assets/b3b1e322-c8ef-48f6-9d98-7004cc2823f6" />
+``C:\Users\Public\ ```
 
----
-### Flag 6 – C2 Domain
+**Memory Credential Theft Tool**
 
-**Finding:** Outbound command-and-control connections observed.
+`` SharpChrome ```
 
-**KQL Query:**
-```kql
-DeviceNetworkEvents
-|where DeviceName contains "as-pc1"
-| where InitiatingProcessAccountName == "sophie.turner"
-|where InitiatingProcessFileName == "daniel_richardson_cv.pdf.exe"
-| project Timestamp, DeviceName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc
+**Injected Process**
 
-```
-**Screenshot:**
-<img width="880" height="295" alt="image" src="https://github.com/user-attachments/assets/1955bce7-5883-44ec-b6b8-250e2094bec0" />
+`` notepad.exe ```
 
+### Discovery Activity
 
----
-### Flag 7 – C2 Process
+The attacker performed reconnaissance to understand the environment.
 
-**Finding:** daniel_richardson_cv.pdf.exe is the process that initiated the outbound connections
+Commands Observed
 
-**Screenshot:**
-<img width="823" height="1091" alt="image" src="https://github.com/user-attachments/assets/795192f7-d074-4e0d-a789-58c7c66b31ec" />
+whoami.exe
+net view
 
----
+Local Privileged Group Queried
 
-### Flag 8 – Staging Infrastructure
+Administrators
+Persistence – Remote Access Tool
 
-**Finding:** External payload hosted for staging.
+The attacker deployed a legitimate remote administration tool.
 
-**KQL Query:**
-```kql
-DeviceNetworkEvents
-| where RemoteIP == "104.21.30.237"
-| project TimeGenerated, DeviceName, RemoteUrl, InitiatingProcessFileName
-```
-**Screenshot:**
-<img width="940" height="349" alt="image" src="https://github.com/user-attachments/assets/9368ecea-5500-46e2-b930-da4fb9d4a5e4" />
+Remote Tool
 
+AnyDesk
 
----
-### Flag 9 – Registry Targets
+SHA256
 
-**Finding:** Targeted local credential stores.
+f42b635d93720d1624c74121b83794d706d4d064bee027650698025703d20532
 
-**Screenshot:**
-<img width="940" height="166" alt="image" src="https://github.com/user-attachments/assets/aa7d7864-789a-40a8-9a33-e9fbf0dd67b6" />
+Download Method
 
+certutil.exe
 
----
-### Flag 10 – Local Staging
+Configuration File
 
-**Finding:** Extracted data was saved locally before exfiltration
+C:\Users\Sophie.Turner\AppData\Roaming\AnyDesk\system.conf
 
-**Screenshot:**
-<img width="856" height="1039" alt="image" src="https://github.com/user-attachments/assets/77d48c53-31c2-442e-b537-36fc1a6d5023" />
+Unattended Access Password
 
----
-### Flag 11 – User Context
+intrud3r!
 
-**Finding:** The attacker confirmed their identity after initial access.
+Deployment Hosts
 
----
-### Flag 12 – Network Enumeration
+as-pc1
+as-pc2
+as-srv
+Lateral Movement
 
-**Finding:** The attacker enumerated network resources. Net view was used to view available shares.
----
+The attacker attempted several remote execution techniques before successfully pivoting.
 
-### Flag 13 – Local Admins
+Failed Methods
 
-**Finding:** The attacker enumerated privileged local group membership.
+wmic.exe
+psexec.exe
 
-**Screenshot / Output:** Decoded command confirms malicious script execution.
-<img width="783" height="1214" alt="image" src="https://github.com/user-attachments/assets/f56db95a-da79-4add-8bfe-162badd1460d" />
+Successful Method
 
----
+mstsc.exe (Remote Desktop)
 
-### Flag 14 – Remote Tool
+Movement Path
 
-**Finding:** AnyDesk installed for persistence.
-**KQL Query:**
-```kql
+as-pc1 > as-pc2 > as-srv
 
-DeviceFileEvents
-| where FileName in ("AnyDesk.exe","AnyDesk64.exe")
-| project TimeGenerated, DeviceName, FileName, FolderPath, InitiatingProcessFileName
-| sort by DeviceName asc, TimeGenerated desc
-```
----
-### Flag 15 – Remote Tool Hash
+Compromised Account
 
-**Finding:** SHA256 hash of the remote access tool Anydesk.exe
-**KQL Query:**
-```kql
-DeviceFileEvents
-| where DeviceName == "as-pc1"
-|where FileName contains "anydesk"
+david.mitchell
 
-```
-<img width="940" height="214" alt="image" src="https://github.com/user-attachments/assets/5d482b0f-1ae6-4ae6-9d48-de023e2087ac" />
+Account Activation
 
----
-### Flag 16 – Download Method
+net.exe active:yes
+Persistence – Scheduled Task
 
-**Finding:** The tool was downloaded using a native Windows binary.
+Additional persistence mechanisms were deployed.
 
-```
-<img width="940" height="214" alt="image" src="https://github.com/user-attachments/assets/5d482b0f-1ae6-4ae6-9d48-de023e2087ac" />
+Scheduled Task
 
----
-### Flag 16 – Configuration Access
+MicrosoftEdgeUpdateCheck
 
-**Finding:** After installation, a configuration file was accessed.
+Renamed Payload
 
-<img width="564" height="1050" alt="image" src="https://github.com/user-attachments/assets/7a634383-1d43-4e92-8612-ac2f655d7c45" />
+RuntimeBroker.exe
 
----
-### Flag 17 – Access Credentials
+Backdoor Account
 
-**Finding:** Unattended access was configured for the remote tool.
+svc_backup
+Data Access & Staging
 
-<img width="605" height="619" alt="image" src="https://github.com/user-attachments/assets/1e9d5f8b-b57f-4af9-b8c9-1a8c4a497022" />
----
-### Flag 18 – Deployment Footprint
+Sensitive financial records were accessed and staged for exfiltration.
 
-**Finding:** The remote tool was installed across the environment.
-**KQL Query:**
-```kql
+Target File
 
-DeviceFileEvents
-| where FileName in ("AnyDesk.exe", "AnyDesk64.exe")    // AnyDesk binaries
-| project TimeGenerated, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine
-| sort by DeviceName asc, TimeGenerated desc
+BACS_Payments_Dec2025.ods
 
-```
-<img width="940" height="142" alt="image" src="https://github.com/user-attachments/assets/85fcd5ca-2fa6-4e45-982a-0adebae044e8" />
----
+Modification Artifact
 
-### Flag 19 – Failed Execution
+.~lock.BACS_Payments_Dec2025.ods#
 
-**Finding:** The attacker attempted remote execution methods that failed.
-**KQL Query:**
-```kql
+Access Origin
 
-DeviceProcessEvents
-| where DeviceName in ("as-pc1","as-pc2")
-| where ProcessCommandLine has_any ("\\\\","/node:","-ComputerName","/S ")
-| project TimeGenerated, DeviceName, FileName, ProcessCommandLine
-| sort by TimeGenerated asc
+as-pc2
 
-```
-**Screenshot / Output:**
-<img width="940" height="198" alt="image" src="https://github.com/user-attachments/assets/ab0ae817-172a-4dc4-870a-24a21d01efba" />
+Archive Created
 
----
+Shares.7z
 
-## Flag 20 – Target Host
+Archive Hash
 
-**Finding:** Remote execution was attempted against a specific system.
----
-### Flag 21 – Sucessful Pivot
+6886c0a2e59792e69df94d2cf6ae62c2364fda50a23ab44317548895020ab048
+Defense Evasion
 
-**Finding:** After failed attempts, a different method achieved lateral movement.
+The attacker attempted to conceal activity before exiting the environment.
 
-- mstsc.exe execution	DeviceProcessEvents
-- RemoteInteractive logon	DeviceLogonEvents
-- Port 3389 traffic	DeviceNetworkEvents
+Logs Cleared
 
----
-### Flag 22 – Movement Path
+Security
+Application
 
-**Finding:** The attacker moved through the environment in a specific sequence: as-pc1>as-pc2>as-srv
----
----
-### Flag 23 – Compromised Account
+Reflective Code Loading
 
-**Finding:** A valid account (david.mitchell) was used for successful lateral movement.
----
----
-### Flag 24 – Account Activation
-
-**Finding:** A disabled account was enabled for further access. The net.exe parameter used to activate the account:active:yes
-
----
-### Flag 25 – Activation Context
-
-**Finding:** The account activation was performed by a specific user: david.mitchell
----
-
-### Flag 26 – Scheduled Persistence
-
-**Finding:** Scheduled tasks and new accounts extend their access even if one mechanism is discovered and removed.
-
-**KQL Query:**
-```kql
- DeviceProcessEvents
-|where DeviceName contains "as-"
-| where ProcessCommandLine contains "/create"  // Only task creation commands
-
-```
-**Screenshot / Output:**
-<img width="940" height="345" alt="image" src="https://github.com/user-attachments/assets/c2d48189-462e-44b6-993f-53ab577d9793" />
-
----
-
-### Flag 27 – Renamed Binary
-
-**Finding:** The persistence payload was renamed to avoid detection.
-
----
-
-### Flag 28 – Persistence Hash
-
-**Finding:** The persistence payload shares a hash with another file in the investigation.
-**KQL Query:**
-```kql
- DeviceProcessEvents
-|where SHA256 == "48b97fd91946e81e3e7742b3554585360551551cbf9398e1f34f4bc4eac3a6b5"
-
-```
-**Screenshot / Output:** 
-<img width="940" height="551" alt="image" src="https://github.com/user-attachments/assets/379849af-74a3-49d9-a36c-12f9954f317d" />
-
----
-### Flag 27 – Renamed Binary
-
-**Finding:** The persistence payload was renamed to avoid detection.
----
-
-### Flag 29 – Sensitive Document
-
-**Finding:** A new local account was created for future access: svc_backup
-
-**KQL Query:**
-```kql
-DeviceFileEvents
-| where DeviceName == "as-srv"
-| where InitiatingProcessAccountName != ""
-| where FileName contains "PAY"
-|project ActionType, FileName, FolderPath
-
-```
-**Screenshot / Output:** 
-<img width="940" height="373" alt="image" src="https://github.com/user-attachments/assets/715846e0-d590-4d83-ae54-16b12f47f7cc" />
----
-
-### Flag 30 – Modification Evidence
-
-**Finding:** The document was opened for editing, not just viewing
-
-**Screenshot / Output:** 
-<img width="940" height="373" alt="image" src="https://github.com/user-attachments/assets/e186761c-cf90-423d-a313-cb380570ab34" />
-
----
-
-### Flag 31 – Access Origin
-
-**Finding:** The document was accessed from a specific workstation
-
----
-### Flag 32 – Exfil Archive
-
-**Finding:** Data was archived before potential exfiltration
-
-**Screenshot / Output:** 
-<img width="940" height="238" alt="image" src="https://github.com/user-attachments/assets/2a5d04a8-522e-44ec-bdd4-ccdc8f27f392" />
----
-### Flag 33 – Archive Hash
-
-**Finding:** The SHA256 hash of the staged archive was identified.
-
-**KQL Query:**
-```kql:
-let fileAccesses = DeviceFileEvents
-| where DeviceName == "as-srv"                     // the file server
-| where ActionType in ("FileRead", "FileRead", "FileModified", "FileCreated")
-| project FileTime = TimeGenerated,
-          FileName,
-          FolderPath,
-          InitiatingProcessAccountName,
-          InitiatingProcessFileName,
-          InitiatingProcessSHA256,
-          SHA256;
-
-let userSessions = DeviceLogonEvents
-| where DeviceName == "as-pc2"                    // client machine
-| project LogonTime = TimeGenerated,
-          AccountName,
-          LogonType;
-
-fileAccesses
-| join kind=inner userSessions on $left.InitiatingProcessAccountName == $right.AccountName
-| where FileTime between (LogonTime .. LogonTime + 12h)   // assume user session duration
-
-```
-
-**Screenshot / Output:** 
-<img width="940" height="322" alt="image" src="https://github.com/user-attachments/assets/7df7eac6-ab70-4ab0-991e-46e55bdd8b3a" />
-
----
-### Flag 21 – Log Clearing
-
-**Finding:** Anti-forensics activity; logs cleared.
-
-**KQL Query:**
-```kql:
-
-DeviceProcessEvents
-| where FileName in ("wevtutil.exe","eventvwr.exe","powershell.exe")
-| where ProcessCommandLine has_any ("cl","Clear-EventLog","/c")
-| project TimeGenerated, DeviceName, FileName, ProcessCommandLine, InitiatingProcessAccountName
-| order by TimeGenerated desc
-```
-
-**Screenshot / Output:** 
-<img width="940" height="111" alt="image" src="https://github.com/user-attachments/assets/27964f46-b1e6-4bc4-b854-5aa9722538a7" />
-
----
-## Flag 22 – Reflective Loading
-
-**Finding:** Evidence of reflective code loading was captured.
----
-## Flag 22 – Memory Tool
-
-**Finding:** A credential theft tool was loaded directly into memory.
-### Flag 21 – Host Process
-
-**Finding:** The credential theft tool was injected into a legitimate process.
-
-**KQL Query:**
-DeviceEvents
-| where DeviceName == "as-pc1"
-| where Timestamp between (datetime(2026-01-15 05:00) .. datetime(2026-01-15 06:00))
-| where InitiatingProcessFileName == "notepad.exe"
-| project Timestamp, ActionType, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine
-
-```
-**Screenshot / Output:** 
-<img width="940" height="178" alt="image" src="https://github.com/user-attachments/assets/8b24a00f-4220-4e2e-b4d0-d0306e7a0789" />
-
----
-
-
+ClrUnbackedModuleLoaded
+Indicators of Compromise (IOC)
+Malicious Files
+File	SHA256
+Daniel_Richardson_CV.pdf.exe	48b97fd91946e81e3e7742b3554585360551551cbf9398e1f34f4bc4eac3a6b5
+RuntimeBroker.exe	48b97fd91946e81e3e7742b3554585360551551cbf9398e1f34f4bc4eac3a6b5
+AnyDesk.exe	f42b635d93720d1624c74121b83794d706d4d064bee027650698025703d20532
+Shares.7z	6886c0a2e59792e69df94d2cf6ae62c2364fda50a23ab44317548895020ab048
+Malicious Domains
+cdn.cloud-endpoint.net
+sync.cloud-endpoint.net
+Suspicious IP Addresses
+37.59.29.33
+64.31.23.30
+88.97.164.155
+104.21.30.237
+Compromised Accounts
+sophie.turner
+david.mitchell
+svc_backup
 
 ---
 ## 🔍 Timeline of Events
