@@ -268,3 +268,27 @@ Sensitive financial data was accessed and staged for potential exfiltration, ind
 4. Improve endpoint detection rules by monitoring for: certutil downloads, scheduled task creations, event log clearing and reflective .NET assembly loading
 
 5. Conduct security awareness training: Focus on phishing attempts targeting HR and recruitment teams.
+
+6. # Appendix – Investigation Queries
+
+ ---
+
+## 🧾 Appendix – Investigation Queries
+**Query 1 – Malware Execution**
+
+```kql
+DeviceProcessEvents
+| where DeviceName == "as-pc1"
+| where FileName == "Daniel_Richardson_CV.pdf.exe" ```
+
+**Query 2 – C2 Communication**
+```kql
+DeviceNetworkEvents
+| where DeviceName contains "as-pc1"
+| where InitiatingProcessFileName == "daniel_richardson_cv.pdf.exe" ```
+
+**Query 3 – AnyDesk Installation**
+```kql
+DeviceFileEvents
+| where FileName in ("AnyDesk.exe","AnyDesk64.exe") ```
+
