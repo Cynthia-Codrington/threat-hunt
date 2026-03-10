@@ -62,41 +62,47 @@ User sophie.turner executed a malicious resume file that initiated the compromis
 - Hash: 48b97fd91946e81e3e7742b3554585360551551cbf9398e1f34f4bc4eac3a6b5
 - Parent Process: Explorer.exe
 - Spawned Process: notepad.exe
+  
+---
 
 ### Command & Control
 Outbound communications were established with attacker infrastructure.
 
 **Domain**
 
-``cdn.cloud-endpoint.net```
+```cdn.cloud-endpoint.net```
 
 **Responsible Process**
 
-``Daniel_Richardson_CV.pdf.exe```
+```Daniel_Richardson_CV.pdf.exe```
 
 **Additional Infrastructure**
 
-``sync.cloud-endpoint.net```
+```sync.cloud-endpoint.net```
+
+---
 
 ### Credential Access
 The attacker attempted to extract credentials from local system stores.
 
 **Registry Targets**
 
-``SAM
+```SAM
 SYSTEM ```
 
 **Local Staging Directory**
 
-``C:\Users\Public\ ```
+```C:\Users\Public\ ```
 
 **Memory Credential Theft Tool**
 
-`` SharpChrome ```
+``` SharpChrome ```
 
 **Injected Process**
 
-`` notepad.exe ```
+``` notepad.exe ```
+
+---
 
 ### Discovery Activity
 
@@ -104,134 +110,146 @@ The attacker performed reconnaissance to understand the environment.
 
 Commands Observed
 
-whoami.exe
-net view
+``` whoami.exe
+net view ```
 
 Local Privileged Group Queried
 
-Administrators
-Persistence – Remote Access Tool
+```Administrators ```
+---
+### Persistence – Remote Access Tool
 
 The attacker deployed a legitimate remote administration tool.
 
-Remote Tool
+**Remote Tool**
 
-AnyDesk
+```AnyDesk```
 
-SHA256
+**SHA256**
 
-f42b635d93720d1624c74121b83794d706d4d064bee027650698025703d20532
+```f42b635d93720d1624c74121b83794d706d4d064bee027650698025703d20532 ```
 
-Download Method
+**Download Method**
 
-certutil.exe
+```certutil.exe ```
 
-Configuration File
+**Configuration File**
 
-C:\Users\Sophie.Turner\AppData\Roaming\AnyDesk\system.conf
+```C:\Users\Sophie.Turner\AppData\Roaming\AnyDesk\system.conf ```
 
-Unattended Access Password
+**Unattended Access Password**
 
-intrud3r!
+```intrud3r! ```
 
-Deployment Hosts
+**Deployment Hosts**
 
-as-pc1
+``` as-pc1
 as-pc2
-as-srv
-Lateral Movement
+as-srv ```
+---
+**Lateral Movement**
 
 The attacker attempted several remote execution techniques before successfully pivoting.
 
-Failed Methods
+**Failed Methods**
 
-wmic.exe
-psexec.exe
+```wmic.exe
+psexec.exe ```
 
-Successful Method
+**Successful Method**
 
-mstsc.exe (Remote Desktop)
+```mstsc.exe (Remote Desktop) ```
 
-Movement Path
+**Movement Path**
 
-as-pc1 > as-pc2 > as-srv
+``` as-pc1 > as-pc2 > as-srv ```
 
-Compromised Account
+**Compromised Account**
 
-david.mitchell
+``` david.mitchell ```
 
-Account Activation
+**Account Activation**
 
-net.exe active:yes
-Persistence – Scheduled Task
+```net.exe active:yes ```
+---
+
+### Persistence – Scheduled Task 
 
 Additional persistence mechanisms were deployed.
 
-Scheduled Task
+**Scheduled Task**
 
-MicrosoftEdgeUpdateCheck
+```MicrosoftEdgeUpdateCheck ```
 
-Renamed Payload
+**Renamed Payload**
 
-RuntimeBroker.exe
+```RuntimeBroker.exe ```
 
-Backdoor Account
+**Backdoor Account**
 
-svc_backup
-Data Access & Staging
+``` svc_backup ```
+
+###Data Access & Staging
 
 Sensitive financial records were accessed and staged for exfiltration.
 
-Target File
+**Target File**
 
-BACS_Payments_Dec2025.ods
+``` BACS_Payments_Dec2025.ods ```
 
-Modification Artifact
+**Modification Artifact**
 
-.~lock.BACS_Payments_Dec2025.ods#
+``` .~lock.BACS_Payments_Dec2025.ods#  ```
 
-Access Origin
+**Access Origin**
 
-as-pc2
+``` as-pc2 ```
 
-Archive Created
+**Archive Created**
 
-Shares.7z
+``` Shares.7z ```
 
-Archive Hash
+**Archive Hash**
 
-6886c0a2e59792e69df94d2cf6ae62c2364fda50a23ab44317548895020ab048
-Defense Evasion
+``` 6886c0a2e59792e69df94d2cf6ae62c2364fda50a23ab44317548895020ab048 ```
+---
+###Defense Evasion
 
 The attacker attempted to conceal activity before exiting the environment.
 
-Logs Cleared
+**Logs Cleared**
 
-Security
-Application
+```Security
+Application ```
 
-Reflective Code Loading
+**Reflective Code Loading**
 
-ClrUnbackedModuleLoaded
+```ClrUnbackedModuleLoaded ```
+---
 Indicators of Compromise (IOC)
-Malicious Files
-File	SHA256
-Daniel_Richardson_CV.pdf.exe	48b97fd91946e81e3e7742b3554585360551551cbf9398e1f34f4bc4eac3a6b5
-RuntimeBroker.exe	48b97fd91946e81e3e7742b3554585360551551cbf9398e1f34f4bc4eac3a6b5
-AnyDesk.exe	f42b635d93720d1624c74121b83794d706d4d064bee027650698025703d20532
-Shares.7z	6886c0a2e59792e69df94d2cf6ae62c2364fda50a23ab44317548895020ab048
-Malicious Domains
-cdn.cloud-endpoint.net
-sync.cloud-endpoint.net
-Suspicious IP Addresses
-37.59.29.33
+**Malicious Files**
+| File	                 |SHA256  |
+| --------------------- | ------------------------- |
+| Daniel_Richardson_CV.pdf.exe	|48b97fd91946e81e3e7742b3554585360551551cbf9398e1f34f4bc4eac3a6b5
+|RuntimeBroker.exe	|48b97fd91946e81e3e7742b3554585360551551cbf9398e1f34f4bc4eac3a6b5
+|AnyDesk.exe	|f42b635d93720d1624c74121b83794d706d4d064bee027650698025703d20532
+|Shares.7z	|6886c0a2e59792e69df94d2cf6ae62c2364fda50a23ab44317548895020ab048
+
+---
+**Malicious Domains**
+```cdn.cloud-endpoint.net
+sync.cloud-endpoint.net ```
+---
+**Suspicious IP Addresses**
+``` 37.59.29.33
 64.31.23.30
 88.97.164.155
-104.21.30.237
-Compromised Accounts
-sophie.turner
+104.21.30.237 ```
+---
+**Compromised Accounts**
+``` sophie.turner
 david.mitchell
-svc_backup
+svc_backup ```
 
 ---
 ## 🔍 Timeline of Events
