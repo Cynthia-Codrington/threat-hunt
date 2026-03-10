@@ -414,23 +414,22 @@ DeviceEvents
 
 ---
 ## 🔍 Timeline of Events
-| Time (UTC)             | Stage                              | Event / Action                                            | Details                                                                       |
-| ---------------------- | ---------------------------------- | --------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| 2026-01-14T23:31      | Initial Access                     | Initial alert                                         | MDE detected suspicious file execution
-|
-| 2026-01-14T23:48 | Initial Access                              | Inbound connection                                            | Remote IP 168.63.129.16:80 connected to local 10.1.0.154:54554                                                      |
-| 2026-01-14T23:47       | Command & Control                       | Outbound C2 connection                               | daniel_richardson_cv.pdf.exe connected to cdn.cloud-endpoint.net                                                              |
-| 2026-01-15T00:11     | Persistence                             | Remote access tool installed                                       | AnyDesk installed, unattended access password intrud3r! configured                  |
-| 2026-01-15T05:09      | Persistence                        | Suspicious child process                                         | notepad.exe spawned by malware |
-| 2026-01-15T04:55      | Data Access                        | Sensitive document access                                        | BACS_Payments_Dec2025.ods opened from host as-pc2                                                     |
-| 2026-01-15T04:59      | Data Access                           | Data archived                                            |Sensitive files saved into Shares.7z              |
-| 2026-01-15T05:00 | Defense Evasion | Memory-based credential theft| SharpChrome loaded in notepad.exe memory                      |
-| 2026-01-15T05:10       | Defense Evasion             | Reflective code loading                                  | Malicious assembly loaded in memory                                             |
-| 2026-01-15T05:15       | Discovery                         | Registry & group enumeration                                      | SAM/SYSTEM queried; Administrators group enumerated                                  |
-| 2026-01-15T06:00      | Lateral Movement                   | Remote execution attempts                                       | WMIC and PsExec failed on host as-pc2                                                 |
-| 2026-01-15T06:10        |Lateral Movement                      | Successful pivot                                 | RDP session from as-pc1 → as-pc2 → as-srv using david.mitchell                                  |
-|2026-01-15T06:30        | Persistence                    | Scheduled task created                          | MicrosoftEdgeUpdateCheck runs RuntimeBroker.exe           |
-| 2026-01-16T11:09      | Privilege Escalation                    | Admin account added                         | svc_backup added as Administrator           |
+| Time (UTC)            | Stage                     | Event / Action                          | Details                                                       |
+| --------------------- | ------------------------- | --------------------------------------- | -------------------------------------------------------------- |
+| 2026-01-14T23:31      | Initial Access            | Initial alert                           | MDE detected suspicious file execution                        |
+| 2026-01-14T23:48      | Initial Access            | Inbound connection                      | Remote IP 168.63.129.16:80 connected to local 10.1.0.154:54554 |
+| 2026-01-14T23:47      | Command & Control         | Outbound C2 connection                  | daniel_richardson_cv.pdf.exe connected to cdn.cloud-endpoint.net  |
+| 2026-01-15T00:11      | Persistence               | Remote access tool installed            | AnyDesk installed, unattended access password intrud3r! configured  |
+| 2026-01-15T05:09      | Persistence               | Suspicious child process                | notepad.exe spawned by malware |
+| 2026-01-15T04:55      | Data Access               | Sensitive document access               | BACS_Payments_Dec2025.ods opened from host as-pc2          |
+| 2026-01-15T04:59      | Data Access               | Data archived                           | Sensitive files saved into Shares.7z              |
+| 2026-01-15T05:00      | Defense Evasion           | Memory-based credential theft           | SharpChrome loaded in notepad.exe memory                      |
+| 2026-01-15T05:10      | Defense Evasion           | Reflective code loading                 | Malicious assembly loaded in memory          |
+| 2026-01-15T05:15      | Discovery                 | Registry & group enumeration            | SAM/SYSTEM queried; Administrators group enumerated    |
+| 2026-01-15T06:00      | Lateral Movement          | Remote execution attempts               | WMIC and PsExec failed on host as-pc2  |
+| 2026-01-15T06:10      | Lateral Movement          | Successful pivot                        | RDP session from as-pc1 → as-pc2 → as-srv using david.mitchell   |
+| 2026-01-15T06:30      | Persistence               | Scheduled task created                  | MicrosoftEdgeUpdateCheck runs RuntimeBroker.exe           |
+| 2026-01-16T11:09      | Privilege Escalation      | Admin account added                     | svc_backup added as Administrator           |
 
 ---
 ## 🧩 MITRE ATT&CK Mapping
