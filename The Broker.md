@@ -87,8 +87,8 @@ The attacker attempted to extract credentials from local system stores.
 
 **Registry Targets**
 
-```SAM
-SYSTEM ```
+```SAM```
+```SYSTEM ```
 
 **Local Staging Directory**
 
@@ -110,12 +110,13 @@ The attacker performed reconnaissance to understand the environment.
 
 Commands Observed
 
-``` whoami.exe
-net view ```
+``` whoami.exe```
+```net view ```
 
 Local Privileged Group Queried
 
 ```Administrators ```
+
 ---
 ### Persistence – Remote Access Tool
 
@@ -139,22 +140,21 @@ The attacker deployed a legitimate remote administration tool.
 
 **Unattended Access Password**
 
-```intrud3r! ```
+```intrud3r!```
 
 **Deployment Hosts**
 
-``` as-pc1
-as-pc2
-as-srv ```
+```as-pc1```
+```as-pc2```
+```as-srv ```
 ---
 **Lateral Movement**
-
 The attacker attempted several remote execution techniques before successfully pivoting.
 
 **Failed Methods**
 
-```wmic.exe
-psexec.exe ```
+```wmic.exe```
+```psexec.exe ```
 
 **Successful Method**
 
@@ -199,7 +199,7 @@ Sensitive financial records were accessed and staged for exfiltration.
 
 **Modification Artifact**
 
-``` .~lock.BACS_Payments_Dec2025.ods#  ```
+``` .~lock.BACS_Payments_Dec2025.ods# ```
 
 **Access Origin**
 
@@ -219,8 +219,8 @@ The attacker attempted to conceal activity before exiting the environment.
 
 **Logs Cleared**
 
-```Security
-Application ```
+```Security```
+```Application ```
 
 **Reflective Code Loading**
 
@@ -237,19 +237,23 @@ Indicators of Compromise (IOC)
 
 ---
 **Malicious Domains**
-```cdn.cloud-endpoint.net
-sync.cloud-endpoint.net ```
+
+```cdn.cloud-endpoint.net```
+```sync.cloud-endpoint.net ```
+
 ---
 **Suspicious IP Addresses**
-``` 37.59.29.33
-64.31.23.30
-88.97.164.155
-104.21.30.237 ```
+
+``` 37.59.29.33```
+```64.31.23.30```
+```88.97.164.155```
+```104.21.30.237 ```
+
 ---
 **Compromised Accounts**
-``` sophie.turner
-david.mitchell
-svc_backup ```
+``` sophie.turner```
+```david.mitchell```
+```svc_backup ```
 
 ---
 ## 🔍 Timeline of Events
