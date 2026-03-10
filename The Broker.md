@@ -54,7 +54,7 @@ Before leaving, the attacker cleared logs and loaded credential-harvesting tools
 
 ## 🚩Investigation Findings
 
-### Flag 1 – Initial Access
+### Initial Access
 User sophie.turner executed a malicious resume file that initiated the compromise.
 
 **Artifacts:**
@@ -74,11 +74,11 @@ Outbound communications were established with attacker infrastructure.
 
 **Responsible Process**
 
-```Daniel_Richardson_CV.pdf.exe```
+```Daniel_Richardson_CV.pdf.exe ```
 
 **Additional Infrastructure**
 
-```sync.cloud-endpoint.net```
+```sync.cloud-endpoint.net ```
 
 ---
 
