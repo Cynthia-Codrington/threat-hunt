@@ -120,7 +120,7 @@ The attacker attempted several remote execution techniques before successfully p
 
 **Failed Methods** ```wmic.exe``` ```psexec.exe ```
 
-**Successful Method** ``mstsc.exe (Remote Desktop) ```
+**Successful Method** ```mstsc.exe (Remote Desktop) ```
 
 **Movement Path** ``` as-pc1 > as-pc2 > as-srv ```
 
