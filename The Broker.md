@@ -147,8 +147,9 @@ The attacker deployed a legitimate remote administration tool.
 ```as-pc1```
 ```as-pc2```
 ```as-srv ```
+
 ---
-**Lateral Movement**
+### Lateral Movement
 The attacker attempted several remote execution techniques before successfully pivoting.
 
 **Failed Methods**
@@ -171,6 +172,7 @@ The attacker attempted several remote execution techniques before successfully p
 **Account Activation**
 
 ```net.exe active:yes ```
+
 ---
 
 ### Persistence – Scheduled Task 
@@ -188,6 +190,8 @@ Additional persistence mechanisms were deployed.
 **Backdoor Account**
 
 ``` svc_backup ```
+
+---
 
 ###Data Access & Staging
 
@@ -212,6 +216,7 @@ Sensitive financial records were accessed and staged for exfiltration.
 **Archive Hash**
 
 ``` 6886c0a2e59792e69df94d2cf6ae62c2364fda50a23ab44317548895020ab048 ```
+
 ---
 ###Defense Evasion
 
@@ -225,8 +230,9 @@ The attacker attempted to conceal activity before exiting the environment.
 **Reflective Code Loading**
 
 ```ClrUnbackedModuleLoaded ```
+
 ---
-Indicators of Compromise (IOC)
+##Indicators of Compromise (IOC)
 **Malicious Files**
 | File	                 |SHA256  |
 | --------------------- | ------------------------- |
