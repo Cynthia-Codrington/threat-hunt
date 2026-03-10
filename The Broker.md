@@ -193,7 +193,7 @@ Additional persistence mechanisms were deployed.
 
 ---
 
-###Data Access & Staging
+##Data Access & Staging
 
 Sensitive financial records were accessed and staged for exfiltration.
 
@@ -218,7 +218,7 @@ Sensitive financial records were accessed and staged for exfiltration.
 ``` 6886c0a2e59792e69df94d2cf6ae62c2364fda50a23ab44317548895020ab048 ```
 
 ---
-###Defense Evasion
+##Defense Evasion
 
 The attacker attempted to conceal activity before exiting the environment.
 
@@ -243,13 +243,11 @@ The attacker attempted to conceal activity before exiting the environment.
 
 ---
 **Malicious Domains**
-
 ```cdn.cloud-endpoint.net```
 ```sync.cloud-endpoint.net ```
 
 ---
 **Suspicious IP Addresses**
-
 ``` 37.59.29.33```
 ```64.31.23.30```
 ```88.97.164.155```
