@@ -101,8 +101,8 @@ DeviceProcessEvents
 ---
 ### Flag 4 – Suspicious Child Process
 
-**Finding:** First successful outbound connection: 2025-11-25T04:14:41.281891Z
-**Last successful connection:** 2025-11-30T01:03:17.6985973Z
+**Finding:** 
+**Last successful connection:** 
 
 **KQL Query:**
 ```kql
@@ -114,11 +114,14 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 **Artifact:** notepad.exe
+<img width="940" height="135" alt="image" src="https://github.com/user-attachments/assets/d4e13ecb-7ed2-476b-924c-1d0e4b2ee684" />
 
 ---
 ### Flag 5 – Process Arguments
 
-**Finding:** Child process executed with unusual arguments.
+**Finding:** Child process executed with unusual arguments.<br>
+
+<img width="695" height="366" alt="image" src="https://github.com/user-attachments/assets/b3b1e322-c8ef-48f6-9d98-7004cc2823f6" />
 
 ---
 ### Flag 6 – C2 Domain
@@ -128,32 +131,24 @@ DeviceProcessEvents
 **KQL Query:**
 ```kql
 DeviceNetworkEvents
-| where DeviceName contains "as-pc1"
-| where InitiatingProcessFileName == "Daniel_Richardson_CV.pdf.exe"
-| project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort
+|where DeviceName contains "as-pc1"
+| where InitiatingProcessAccountName == "sophie.turner"
+|where InitiatingProcessFileName == "daniel_richardson_cv.pdf.exe"
+| project Timestamp, DeviceName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
+
 ```
 **Screenshot:**
-<img width="940" height="91" alt="image" src="https://github.com/user-attachments/assets/a382f211-5186-4216-b36e-d029340556fd" />
+<img width="880" height="295" alt="image" src="https://github.com/user-attachments/assets/1955bce7-5883-44ec-b6b8-250e2094bec0" />
+
 
 ---
 ### Flag 7 – C2 Process
 
-**Finding:** Process responsible for C2 traffic
-**Artifact:** notepad.exe
+**Finding:** daniel_richardson_cv.pdf.exe is the process that initiated the outbound connections
 
-**KQL Query:**
-```kql
-DeviceFileEvents
-| where DeviceName == "ch-ops-wks02"
-| where Timestamp <= datetime(2025-11-30T01:03:17.6985973Z)
-| where ActionType == "FileCreated"
-| where FileName contains_cs "inventory"
-| sort by Timestamp desc
-| project Timestamp, ActionType, DeviceName, FileName, FolderPath, SHA256
-```
 **Screenshot:**
-<img width="940" height="229" alt="image" src="https://github.com/user-attachments/assets/3a6b28eb-0ce8-44e2-a865-71390abe4794" />
+<img width="823" height="1091" alt="image" src="https://github.com/user-attachments/assets/795192f7-d074-4e0d-a789-58c7c66b31ec" />
 
 ---
 
@@ -168,100 +163,43 @@ DeviceNetworkEvents
 | project TimeGenerated, DeviceName, RemoteUrl, InitiatingProcessFileName
 ```
 **Screenshot:**
-<img width="940" height="168" alt="image" src="https://github.com/user-attachments/assets/8df7dc34-8049-426d-a0fe-a3220a6a61da" />
+<img width="940" height="349" alt="image" src="https://github.com/user-attachments/assets/9368ecea-5500-46e2-b930-da4fb9d4a5e4" />
+
 
 ---
 ### Flag 9 – Registry Targets
 
 **Finding:** Targeted local credential stores.
 
-**KQL Query:**
-```kql
-DeviceRegistryEvents
-|where DeviceName == "ch-ops-wks02"
-| where TimeGenerated between (todatetime('2025-11-20T00:00:00Z') .. todatetime('2025-12-30T23:59:59Z') )
-| where ActionType in ("RegistryKeyCreated", "RegistryValueSet")
-|where RegistryKey contains "sch"
-|project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, RegistryKey, RegistryValueName, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
 **Screenshot:**
-<img width="940" height="165" alt="image" src="https://github.com/user-attachments/assets/9c6bf006-6c35-4cfd-ac79-d41407130acd" />
+<img width="940" height="166" alt="image" src="https://github.com/user-attachments/assets/aa7d7864-789a-40a8-9a33-e9fbf0dd67b6" />
+
 
 ---
 ### Flag 10 – Local Staging
 
-**Finding:** Run key added then deleted; value MaintenanceRunner.
+**Finding:** Extracted data was saved locally before exfiltration
 
-**KQL Query:**
-```kql
-DeviceRegistryEvents
-|where DeviceName == "ch-ops-wks02"
-| where TimeGenerated between (todatetime('2025-11-20T00:00:00Z') .. todatetime('2025-12-30T23:59:59Z') )
-| where ActionType in ("RegistryKeyCreated", "RegistryValueSet", "RegistryKeyDeleted")
-|where InitiatingProcessFileName == "powershell.exe"
-|project DeviceName, InitiatingProcessAccountName, ActionType, RegistryKey, RegistryValueName, InitiatingProcessFileName, InitiatingProcessCommandLine
-```
 **Screenshot:**
-<img width="940" height="311" alt="image" src="https://github.com/user-attachments/assets/2d7e2ff7-508e-4366-87a5-68aa28f2fe19" />
+<img width="856" height="1039" alt="image" src="https://github.com/user-attachments/assets/77d48c53-31c2-442e-b537-36fc1a6d5023" />
 
 ---
 ### Flag 11 – User Context
 
-**Finding:** ConfigAdjust event by PowerShell at 2025-11-23T03:47:21.8529749Z.
-
-**KQL Query:**
-```kql
-DeviceEvents
-| where DeviceName == "ch-ops-wks02"
-| where Timestamp between (datetime(2025-11-20T00:00:00Z) .. datetime(2025-12-30T23:59:59Z))
-| where AdditionalFields contains "configadjust"
-| sort by Timestamp desc
-```
-**Screenshot:**
-<img width="940" height="302" alt="image" src="https://github.com/user-attachments/assets/f9efab24-2772-4021-ac67-1bb4d0305eeb" />
+**Finding:** The attacker confirmed their identity after initial access.
 
 ---
 ### Flag 12 – Network Enumeration
 
-**Finding:** Attacker attempted to exclude staging folder from Windows Defender real-time scanning:
-C:\ProgramData\Corp\Ops\staging
-**KQL Query:**
-```kql
-
-DeviceProcessEvents
-| where DeviceName == "ch-ops-wks02"
-| where ProcessCommandLine has "ExclusionPath"
-| sort by Timestamp desc
-| project Timestamp, ProcessCommandLine, AccountName, FolderPath
-```
-
-**Screenshot / Output:** Attempted Defender exclusion logged.
-<img width="940" height="114" alt="image" src="https://github.com/user-attachments/assets/5fc688b0-fced-49f9-a148-1f693786550c" />
-
+**Finding:** The attacker enumerated network resources. Net view was used to view available shares.
 ---
 
 ### Flag 13 – Local Admins
 
-**Finding:** Encoded PowerShell executed to write diagnostic artifact to CorpHealth folder.
-**KQL Query:**
-```kql
-
-DeviceProcessEvents
-| where DeviceName == "ch-ops-wks02"
-| where Timestamp between (datetime(2025-11-22T00:00:00Z) .. datetime(2025-12-30T23:59:59Z))
-| where ProcessCommandLine has "powershell"
-| where ProcessCommandLine has_any ("-EncodedCommand", "-enc")
-| extend Encoded = extract(@"(?i)-(?:encodedcommand|enc)\s+([A-Za-z0-9+/=]+)", 1, ProcessCommandLine)
-| where isnotempty(Encoded)
-| extend Decoded = base64_decode_tostring(Encoded)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, ProcessCommandLine, Decoded
-| sort by Timestamp desc
-```
+**Finding:** The attacker enumerated privileged local group membership.
 
 **Screenshot / Output:** Decoded command confirms malicious script execution.
-<img width="940" height="131" alt="image" src="https://github.com/user-attachments/assets/72879210-e179-44af-a239-ac33b9b76656" />
+<img width="783" height="1214" alt="image" src="https://github.com/user-attachments/assets/f56db95a-da79-4add-8bfe-162badd1460d" />
 
 ---
 
@@ -276,14 +214,59 @@ DeviceFileEvents
 | project TimeGenerated, DeviceName, FileName, FolderPath, InitiatingProcessFileName
 | sort by DeviceName asc, TimeGenerated desc
 ```
+---
+### Flag 15 – Remote Tool Hash
 
-**Screenshot / Output:** Token privilege modification event logged.
-<img width="940" height="171" alt="image" src="https://github.com/user-attachments/assets/14a76e57-7a31-4723-92da-7a0fcb2a87a8" />
+**Finding:** SHA256 hash of the remote access tool Anydesk.exe
+**KQL Query:**
+```kql
+DeviceFileEvents
+| where DeviceName == "as-pc1"
+|where FileName contains "anydesk"
+
+```
+<img width="940" height="214" alt="image" src="https://github.com/user-attachments/assets/5d482b0f-1ae6-4ae6-9d48-de023e2087ac" />
 
 ---
-### Flag 16 – Failed Execution
+### Flag 16 – Download Method
 
-**Finding:** Attempted lateral movement failed.
+**Finding:** The tool was downloaded using a native Windows binary.
+
+```
+<img width="940" height="214" alt="image" src="https://github.com/user-attachments/assets/5d482b0f-1ae6-4ae6-9d48-de023e2087ac" />
+
+---
+### Flag 16 – Configuration Access
+
+**Finding:** After installation, a configuration file was accessed.
+
+<img width="564" height="1050" alt="image" src="https://github.com/user-attachments/assets/7a634383-1d43-4e92-8612-ac2f655d7c45" />
+
+---
+### Flag 17 – Access Credentials
+
+**Finding:** Unattended access was configured for the remote tool.
+
+<img width="605" height="619" alt="image" src="https://github.com/user-attachments/assets/1e9d5f8b-b57f-4af9-b8c9-1a8c4a497022" />
+---
+### Flag 18 – Deployment Footprint
+
+**Finding:** The remote tool was installed across the environment.
+**KQL Query:**
+```kql
+
+DeviceFileEvents
+| where FileName in ("AnyDesk.exe", "AnyDesk64.exe")    // AnyDesk binaries
+| project TimeGenerated, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine
+| sort by DeviceName asc, TimeGenerated desc
+
+```
+<img width="940" height="142" alt="image" src="https://github.com/user-attachments/assets/85fcd5ca-2fa6-4e45-982a-0adebae044e8" />
+---
+
+### Flag 19 – Failed Execution
+
+**Finding:** The attacker attempted remote execution methods that failed.
 **KQL Query:**
 ```kql
 
@@ -292,87 +275,157 @@ DeviceProcessEvents
 | where ProcessCommandLine has_any ("\\\\","/node:","-ComputerName","/S ")
 | project TimeGenerated, DeviceName, FileName, ProcessCommandLine
 | sort by TimeGenerated asc
-```
 
-**Screenshot / Output:** Confirms staged reverse shell.
-<img width="940" height="64" alt="image" src="https://github.com/user-attachments/assets/fd6ed347-b0cc-4152-8256-cbc6a10eecd3" />
-<img width="940" height="309" alt="image" src="https://github.com/user-attachments/assets/4d2e1686-ad15-4f64-bc09-2a22ee1a42ad" />
+```
+**Screenshot / Output:**
+<img width="940" height="198" alt="image" src="https://github.com/user-attachments/assets/ab0ae817-172a-4dc4-870a-24a21d01efba" />
 
 ---
 
-## Flag 17 – Successful Pivot
+## Flag 20 – Target Host
 
-**Finding:** Successful lateral movement.
-**KQL Query:**
-```kql
+**Finding:** Remote execution was attempted against a specific system.
+---
+### Flag 21 – Sucessful Pivot
 
-DeviceNetworkEvents
-| where DeviceName == "ch-ops-wks02"
-| where InitiatingProcessFileName in~ ("curl.exe", "powershell.exe", "pwsh.exe")
-| where RemoteIP !startswith "10." and RemoteIP !startswith "192.168." and RemoteIP !startswith "172."
-| project TimeGenerated, InitiatingProcessFileName, RemoteIP, RemotePort, Protocol, InitiatingProcessAccountName, RemoteUrl
-| order by TimeGenerated desc
-```
+**Finding:** After failed attempts, a different method achieved lateral movement.
 
-*Screenshot / Output:* Download URL confirmed.
-<img width="940" height="230" alt="image" src="https://github.com/user-attachments/assets/71e5aa73-e265-4571-9c33-96e78b560a8e" />
+- mstsc.exe execution	DeviceProcessEvents
+- RemoteInteractive logon	DeviceLogonEvents
+- Port 3389 traffic	DeviceNetworkEvents
 
 ---
-### Flag 18 – Scheduled Persistence
+### Flag 22 – Movement Path
 
-**Finding:** Scheduled task added for persistence.
+**Finding:** The attacker moved through the environment in a specific sequence: as-pc1>as-pc2>as-srv
+---
+---
+### Flag 23 – Compromised Account
+
+**Finding:** A valid account (david.mitchell) was used for successful lateral movement.
+---
+---
+### Flag 24 – Account Activation
+
+**Finding:** A disabled account was enabled for further access. The net.exe parameter used to activate the account:active:yes
+
+---
+### Flag 25 – Activation Context
+
+**Finding:** The account activation was performed by a specific user: david.mitchell
+---
+
+### Flag 26 – Scheduled Persistence
+
+**Finding:** Scheduled tasks and new accounts extend their access even if one mechanism is discovered and removed.
+
 **KQL Query:**
 ```kql
+ DeviceProcessEvents
+|where DeviceName contains "as-"
+| where ProcessCommandLine contains "/create"  // Only task creation commands
 
-DeviceProcessEvents
-| where DeviceName == "ch-ops-wks02"
-| where FileName endswith ".exe"
-| where FolderPath has "C:\\Users"
-| sort by Timestamp desc
-| project Timestamp, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessAccountName, ProcessCommandLine
 ```
-
-**Screenshot / Output:** Execution confirmed.
-<img width="940" height="141" alt="image" src="https://github.com/user-attachments/assets/22150769-51c6-4d89-914f-ae55dd795b1e" />
+**Screenshot / Output:**
+<img width="940" height="345" alt="image" src="https://github.com/user-attachments/assets/c2d48189-462e-44b6-993f-53ab577d9793" />
 
 ---
 
-### Flag 19 – Backdoor Account
+### Flag 27 – Renamed Binary
 
-**Finding:** New local account created for access..
-**KQL Query:**
-```kql
-
-DeviceNetworkEvents
-| where DeviceName == "ch-ops-wks02"
-| where ActionType in~ ("ConnectionFailed", "ConnectionAttempt")
-| where RemotePort == 11746
-| sort by Timestamp desc
-| project Timestamp, DeviceName, ActionType, RemotePort, RemoteIP, InitiatingProcessFileName
-```
-
-**Screenshot / Output:** External C2 contact logged.
-<img width="940" height="184" alt="image" src="https://github.com/user-attachments/assets/4a451ef2-de23-45b6-bda2-883e49c6110f" />
+**Finding:** The persistence payload was renamed to avoid detection.
 
 ---
-### Flag 20 – Sensitive Document
 
-**Finding:** Financial data accessed and staged.
+### Flag 28 – Persistence Hash
+
+**Finding:** The persistence payload shares a hash with another file in the investigation.
+**KQL Query:**
+```kql
+ DeviceProcessEvents
+|where SHA256 == "48b97fd91946e81e3e7742b3554585360551551cbf9398e1f34f4bc4eac3a6b5"
+
+```
+**Screenshot / Output:** 
+<img width="940" height="551" alt="image" src="https://github.com/user-attachments/assets/379849af-74a3-49d9-a36c-12f9954f317d" />
+
+---
+### Flag 27 – Renamed Binary
+
+**Finding:** The persistence payload was renamed to avoid detection.
+---
+
+### Flag 29 – Sensitive Document
+
+**Finding:** A new local account was created for future access: svc_backup
 
 **KQL Query:**
 ```kql
-
 DeviceFileEvents
 | where DeviceName == "as-srv"
-| where ActionType in ("FileRead","FileModified","FileCreated")
-| project TimeGenerated, FileName, FolderPath, InitiatingProcessAccountName, InitiatingProcessFileName, SHA256
-```
+| where InitiatingProcessAccountName != ""
+| where FileName contains "PAY"
+|project ActionType, FileName, FolderPath
 
-**Screenshot / Output:** Startup persistence observed.
-<img width="940" height="230" alt="image" src="https://github.com/user-attachments/assets/3da4f36e-b3b5-434d-9c3a-e4f8fbb03bfc" />
+```
+**Screenshot / Output:** 
+<img width="940" height="373" alt="image" src="https://github.com/user-attachments/assets/715846e0-d590-4d83-ae54-16b12f47f7cc" />
+---
+
+### Flag 30 – Modification Evidence
+
+**Finding:** The document was opened for editing, not just viewing
+
+**Screenshot / Output:** 
+<img width="940" height="373" alt="image" src="https://github.com/user-attachments/assets/e186761c-cf90-423d-a313-cb380570ab34" />
 
 ---
 
+### Flag 31 – Access Origin
+
+**Finding:** The document was accessed from a specific workstation
+
+---
+### Flag 32 – Exfil Archive
+
+**Finding:** Data was archived before potential exfiltration
+
+**Screenshot / Output:** 
+<img width="940" height="238" alt="image" src="https://github.com/user-attachments/assets/2a5d04a8-522e-44ec-bdd4-ccdc8f27f392" />
+---
+### Flag 33 – Archive Hash
+
+**Finding:** The SHA256 hash of the staged archive was identified.
+
+**KQL Query:**
+```kql:
+let fileAccesses = DeviceFileEvents
+| where DeviceName == "as-srv"                     // the file server
+| where ActionType in ("FileRead", "FileRead", "FileModified", "FileCreated")
+| project FileTime = TimeGenerated,
+          FileName,
+          FolderPath,
+          InitiatingProcessAccountName,
+          InitiatingProcessFileName,
+          InitiatingProcessSHA256,
+          SHA256;
+
+let userSessions = DeviceLogonEvents
+| where DeviceName == "as-pc2"                    // client machine
+| project LogonTime = TimeGenerated,
+          AccountName,
+          LogonType;
+
+fileAccesses
+| join kind=inner userSessions on $left.InitiatingProcessAccountName == $right.AccountName
+| where FileTime between (LogonTime .. LogonTime + 12h)   // assume user session duration
+
+```
+
+**Screenshot / Output:** 
+<img width="940" height="322" alt="image" src="https://github.com/user-attachments/assets/7df7eac6-ab70-4ab0-991e-46e55bdd8b3a" />
+
+---
 ### Flag 21 – Log Clearing
 
 **Finding:** Anti-forensics activity; logs cleared.
@@ -387,26 +440,31 @@ DeviceProcessEvents
 | order by TimeGenerated desc
 ```
 
-**Screenshot / Output:** Remote device identified.
-<img width="745" height="227" alt="image" src="https://github.com/user-attachments/assets/33564ad5-9693-40dd-812b-b22ec225d6ba" />
+**Screenshot / Output:** 
+<img width="940" height="111" alt="image" src="https://github.com/user-attachments/assets/27964f46-b1e6-4bc4-b854-5aa9722538a7" />
 
 ---
-
 ## Flag 22 – Reflective Loading
 
-**Finding:** Memory injection observed.
-**KQL Query:**
-```kql
+**Finding:** Evidence of reflective code loading was captured.
+---
+## Flag 22 – Memory Tool
 
+**Finding:** A credential theft tool was loaded directly into memory.
+### Flag 21 – Host Process
+
+**Finding:** The credential theft tool was injected into a legitimate process.
+
+**KQL Query:**
 DeviceEvents
 | where DeviceName == "as-pc1"
 | where Timestamp between (datetime(2026-01-15 05:00) .. datetime(2026-01-15 06:00))
 | where InitiatingProcessFileName == "notepad.exe"
 | project Timestamp, ActionType, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine
-```
 
-**Screenshot / Output:** Confirms network origin.
-<img width="925" height="484" alt="image" src="https://github.com/user-attachments/assets/499f3961-72a0-4f46-a7c1-034eb60f0a9e" />
+```
+**Screenshot / Output:** 
+<img width="940" height="178" alt="image" src="https://github.com/user-attachments/assets/8b24a00f-4220-4e2e-b4d0-d0306e7a0789" />
 
 ---
 
